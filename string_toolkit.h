@@ -33,6 +33,11 @@ char * st_get_content_no_flags(const unsigned int argc, char ** argv) {
         size += (strlen(argv[i]) + 1) * sizeof(char);
     }
     
+    if (!size) {
+        free(indices);
+        return NULL;
+    }
+    
     char * ptr = malloc(size);
     ptr[(size / sizeof(char)) - 1] = '\0';
     
