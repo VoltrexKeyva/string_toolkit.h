@@ -68,7 +68,7 @@ Shortens a string, returns `NULL` if the specified string length is lower or equ
 char * shortened = st_shorten("Something", 4, NULL);
 // returns "Some..."
 
-char * null1 = st_shorten("Something", 999, NULL);
+char * null = st_shorten("Something", 999, NULL);
 // returns NULL
 
 char * custom_placeholder = st_shorten("Something", 4, "???");
@@ -125,4 +125,23 @@ int main(int argc, char ** argv) {
         printf("%s\n", data.value);
     }
 }
+```
+
+## Macros
+### Check if a character is alphanumberic, or an underscore
+```c
+const bool a = st_is_alnum('a');
+// returns 1
+
+const bool b = st_is_alnum('/');
+// returns 0
+```
+
+### Check if a character is a number
+```c
+const bool a = st_is_num('6');
+// returns 1
+
+const bool b = st_is_num('a');
+// returns 0
 ```
