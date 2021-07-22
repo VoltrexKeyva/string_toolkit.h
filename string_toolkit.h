@@ -89,8 +89,8 @@ char * st_get_content_no_options(const unsigned int argc, char ** argv) {
 
 typedef struct {
     char * value;
-    bool found;
-    bool has_value;
+    const bool found;
+    const bool has_value;
 } st_flag_data;
 
 st_flag_data st_flag_get_value(const unsigned int argc, char ** argv, const char * key) {
