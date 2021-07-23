@@ -161,7 +161,7 @@ int main(int argc, char ** argv) {
 ```
 
 ### Get console arguments flag value.
-Gets the value from a console argument. Returns a `st_flag_data` struct.
+Gets the value from a console argument. Returns a [`st_flag_data`](#st_flag_data) struct.
 
 ```c
 int main(int argc, char ** argv) {
