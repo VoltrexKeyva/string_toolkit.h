@@ -4,7 +4,7 @@ A simple C library containing tools to manipulate a C string. Inspired by [strin
 ## Structs
 ### `st_str_arr`
 Represents an array of strings.
-- `char ** data` The array. Can be `NULL`.
+- `char ** data` The array. Can be `NULL` if the size below is `0`.
 - `const unsigned int size` The array size.
 
 ### `st_flag_data`
@@ -20,9 +20,9 @@ All functions and macros start with a `st_` prefix.
 Splits the string to chunks in the form of a string array. Returns a `st_str_arr` struct.
 
 ```c
-st_str_arr arr = arr = st_to_chunks("Hello world!", 5);
+st_str_arr arr = st_to_chunks("Hello world!", 5);
 
-if (arr.size) {    
+if (arr.size) {
     for (unsigned int i = 0; i < arr.size; i++) {
         printf("%s\n", arr.data[i]);
     }
