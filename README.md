@@ -37,14 +37,8 @@ st_str_arr arr4 = st_split("       ", ' ');
 Splits the string to chunks in the form of a string array. Returns a [`st_str_arr`](#st_str_arr) struct, the string array can be empty if the specified string is longer than the chunk amount.
 
 ```c
-// split the string "Hello, world!" to an array where each string is at most 5 characters long.
 st_str_arr arr = st_to_chunks("Hello world!", 5);
-
-if (arr.size) {
-    for (unsigned int i = 0; i < arr.size; i++) {
-        printf("%s\n", arr.data[i]);
-    }
-}
+// { "Hello", " worl", "d!" }
 ```
 
 ### Get the sub-string of a string
