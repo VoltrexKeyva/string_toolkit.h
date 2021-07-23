@@ -15,6 +15,55 @@
 #define false  0
 #endif
 
+typedef struct {
+    const unsigned int size;
+    char ** data;
+} st_str_arr;
+
+st_str_arr st_to_chunks(const char * string, const unsigned int chunk_by) {
+    const unsigned int string_length = strlen(string);
+    if (chunk_by >= string_length) {
+        const st_str_arr arr = { 0, NULL };
+        return arr;
+    }
+    
+    const unsigned int array_length = round(ceil((double)string_length / (double)chunk_by));
+    st_str_arr output = { array_length };
+    
+    output.data = malloc(array_length * sizeof(char *));
+    
+    unsigned int j = 0;
+    for (unsigned int i = 0; i < array_length; i++) {
+        // won't overload
+        if ((j + chunk_by) <= string_length) {
+            output.data[i] = malloc(chunk_by * sizeof(char));
+            output.data[i][chunk_by] = '\0';
+            
+            const unsigned int l = j + chunk_by;
+            unsigned int k = 0;
+            for (; j < l; j++) {
+                output.data[i][k] = string[j];
+                k++;
+            }
+            
+            continue;
+        }
+        
+        // will overload
+        const unsigned int l = string_length - j;
+        output.data[i] = malloc(l * sizeof(char));
+        output.data[i][l] = '\0';
+    
+        unsigned int k = 0;
+        for (; j < string_length; j++) {
+            output.data[i][k] = string[j];
+            k++;
+        }
+    }
+    
+    return output;
+}
+
 char * st_substr(const char * string, unsigned int a, unsigned int b) {
     if ((a + b) >= strlen(string))
         return NULL;

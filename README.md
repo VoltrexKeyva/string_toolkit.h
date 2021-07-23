@@ -1,8 +1,33 @@
 # string_toolkit.h
 A simple C library containing tools to manipulate a C string. Inspired by [string-toolkit by VoltrexMaster](https://github.com/VoltrexMaster/string-toolkit). Everything is contained in the header file so you can just download it.
 
+## Structs
+### `st_str_arr`
+Represents an array of strings.
+- `char ** data` The array. Can be `NULL`.
+- `const unsigned int size` The array size.
+
+### `st_flag_data`
+The data returned after retrieving a value from a console flag.
+- `char * value` The string value. Could be `NULL` if the one or more booleans below are not `1`.
+- `const bool found` A boolean that tells whether it found the flag or not.
+- `const bool has_value` A boolean that tells whether the flag has any value or not. Can be `0` if things like `--flag --flag2` happened.
+
 ## Functions
 All functions and macros start with a `st_` prefix.
+
+### Split a string to chunks
+Splits the string to chunks in the form of a string array. Returns a `st_str_arr` struct.
+
+```c
+st_str_arr arr = arr = st_to_chunks("Hello world!", 5);
+
+if (arr.size) {    
+    for (unsigned int i = 0; i < arr.size; i++) {
+        printf("%s\n", arr.data[i]);
+    }
+}
+```
 
 ### Get the sub-string of a string
 Slices a string like so. Returns `NULL` if the sum of both numbers is equal or more than the string length.
@@ -118,12 +143,7 @@ int main(int argc, char ** argv) {
 ```
 
 ### Get console arguments flag value.
-Gets the value from a console argument.
-
-Returns a `st_flag_data` struct with the following structure.
-- `char * value` The string value. Could be `NULL` if the one or more booleans below are not `1`.
-- `const bool found` A boolean that tells whether it found the flag or not.
-- `const bool has_value` A boolean that tells whether the flag has any value or not. Can be `0` if things like `--flag --flag2` happened.
+Gets the value from a console argument. Returns a `st_flag_data` struct.
 
 ```c
 int main(int argc, char ** argv) {
