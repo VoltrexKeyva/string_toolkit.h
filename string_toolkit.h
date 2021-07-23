@@ -20,6 +20,94 @@ typedef struct {
     char ** data;
 } st_str_arr;
 
+st_str_arr st_split(const char * string, const char delimiter) {
+    const unsigned int string_length = strlen(string);
+    if (string_length < 3) {
+        const st_str_arr arr = { 0, NULL };
+        return arr;
+    }
+    
+    unsigned int ** indices = malloc(string_length * sizeof(unsigned int *));
+    unsigned int indices_length = 0;
+    bool start_match = false;
+    
+    int current_start = -1;
+    
+    for (unsigned int i = 0; i < string_length; i++) {
+        if (!start_match) {
+            if (string[i] != delimiter) {
+                start_match = true;
+                
+                if (string[i + 1] == delimiter) {
+                    indices[indices_length] = malloc(2 * sizeof(unsigned int));
+                    indices[indices_length][0] = i;
+                    indices[indices_length][1] = i;
+                    
+                    indices_length++;
+                } else
+                    current_start = i;
+            }
+            
+            continue;
+        }
+        
+        if (i != (string_length - 1)) {
+            
+            if (string[i] == delimiter && string[i + 1] != delimiter)
+                current_start = i + 1;
+        
+            else if (string[i] != delimiter && string[i + 1] == delimiter) {
+                indices[indices_length] = malloc(2 * sizeof(unsigned int));
+                indices[indices_length][0] = current_start == -1 ? i : (unsigned int)current_start;
+                indices[indices_length][1] = i;
+                indices_length++;
+                
+                current_start = -1;
+            }
+        
+            continue;
+        }
+        
+        if (current_start != -1) {
+            indices[indices_length] = malloc(2 * sizeof(unsigned int));
+            indices[indices_length][0] = (unsigned int)current_start;
+            indices[indices_length][1] = string_length - 1;
+            indices_length++;
+        }
+    }
+    
+    if (indices_length < 2) {
+        free(indices);
+        const st_str_arr arr = { 0, NULL };
+        return arr;
+    }
+    
+    st_str_arr arr = { indices_length };
+    arr.data = malloc(indices_length * sizeof(char *));
+    
+    for (unsigned int i = 0; i < indices_length; i++) {
+        if (indices[i][0] == indices[i][1]) {
+            arr.data[i] = malloc(2 * sizeof(char));
+            arr.data[i][0] = string[indices[i][0]];
+            arr.data[i][1] = '\0';
+            continue;
+        }
+        
+        arr.data[i] = malloc((indices[i][1] - indices[i][0] + 1) * sizeof(char));
+        
+        unsigned int k = 0;
+        for (unsigned int j = indices[i][0]; j <= indices[i][1]; j++) {
+            arr.data[i][k] = string[j];
+            k++;
+        }
+        
+        arr.data[i][k] = '\0';
+    }
+    
+    free(indices);
+    return arr;
+}
+
 st_str_arr st_to_chunks(const char * string, const unsigned int chunk_by) {
     const unsigned int string_length = strlen(string);
     if (chunk_by >= string_length) {

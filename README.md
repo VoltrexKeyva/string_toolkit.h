@@ -1,6 +1,8 @@
 # string_toolkit.h
 A simple C library containing tools to manipulate a C string. Inspired by [string-toolkit by VoltrexMaster](https://github.com/VoltrexMaster/string-toolkit). Everything is contained in the header file so you can just download it.
 
+All structs, functions, and macro names start with a `st_` prefix.
+
 ## Structs
 ### `st_str_arr`
 Represents an array of strings.
@@ -14,10 +16,25 @@ The data returned after retrieving a value from a console flag.
 - `const bool has_value` A boolean that tells whether the flag has any value or not. Can be `0` if things like `--flag --flag2` happened.
 
 ## Functions
-All functions and macros start with a `st_` prefix.
 
-### Split a string to chunks
-Splits the string to chunks in the form of a string array. Returns a `st_str_arr` struct.
+### Split a string by a character
+Splits the string by a character delimiter. Returns a [`st_str_arr`](#st_str_arr) struct, as follows.
+```c
+st_str_arr arr1 = st_split("Hello world!", ' ');
+// { "Hello", "world!" }
+
+st_str_arr arr2 = st_split("  Hello   world!  ", ' ');
+// { "Hello", "world!" }
+
+st_str_arr arr3 = st_split(" Hello ", ' ');
+// empty array
+
+st_str_arr arr4 = st_split("       ", ' ');
+// empty array
+```
+
+### Split a string by chunks
+Splits the string to chunks in the form of a string array. Returns a [`st_str_arr`](#st_str_arr) struct, the string array can be empty if the specified string is longer than the chunk amount.
 
 ```c
 // split the string "Hello, world!" to an array where each string is at most 5 characters long.
