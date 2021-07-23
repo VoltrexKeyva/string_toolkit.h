@@ -27,7 +27,7 @@ st_str_arr st_to_chunks(const char * string, const unsigned int chunk_by) {
         return arr;
     }
     
-    const unsigned int array_length = round(ceil((double)string_length / (double)chunk_by));
+    const unsigned int array_length = ceil((double)string_length / (double)chunk_by);
     st_str_arr output = { array_length };
     
     output.data = malloc(array_length * sizeof(char *));

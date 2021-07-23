@@ -20,6 +20,7 @@ All functions and macros start with a `st_` prefix.
 Splits the string to chunks in the form of a string array. Returns a `st_str_arr` struct.
 
 ```c
+// split the string "Hello, world!" to an array where each string is at most 5 characters long.
 st_str_arr arr = st_to_chunks("Hello world!", 5);
 
 if (arr.size) {
