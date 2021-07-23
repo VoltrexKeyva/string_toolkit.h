@@ -4,6 +4,13 @@ A simple C library containing tools to manipulate a C string. Inspired by [strin
 ## Functions
 All functions and macros start with a `st_` prefix.
 
+### Get the sub-string of a string
+Slices a string like so. Returns `NULL` if the sum of both numbers is equal or more than the string length.
+```c
+char * sub_string = st_substr("Super awesome!", 6, 7);
+// outputs "awesome"
+```
+
 ### Convert string to abbreviation
 Converts the string to the abbreviation for it. e.g: `Hello, World!` to `HW`
 ```c
@@ -88,6 +95,8 @@ int main(int argc, char ** argv) {
     if (result != NULL) {
         printf("%s\n", result);
     }
+    
+    return 0;
 }
 ```
 
@@ -103,6 +112,8 @@ int main(int argc, char ** argv) {
     if (result != NULL) {
         printf("%s\n", result);
     }
+    
+    return 0;
 }
 ```
 
@@ -124,6 +135,8 @@ int main(int argc, char ** argv) {
     if (data.value != NULL) {
         printf("%s\n", data.value);
     }
+    
+    return 0;
 }
 ```
 

@@ -15,6 +15,26 @@
 #define false  0
 #endif
 
+char * st_substr(const char * string, unsigned int a, unsigned int b) {
+    if ((a + b) >= strlen(string))
+        return NULL;
+    
+    if (!b)
+        b = strlen(string) - a;
+    
+    char * ptr = malloc(b * sizeof(char));
+    
+    const unsigned int max = a + b;
+    unsigned int i = 0;
+    for (; a < max; a++) {
+        ptr[i] = string[a];
+        i++;
+    }
+    
+    ptr[i] = '\0';
+    return ptr;
+}
+
 char * st_get_content_no_flags(const unsigned int argc, char ** argv) {
     if (argc < 2 || (strlen(argv[0]) > 2 && argv[0][0] == '-' && argv[0][1] == '-'))
         return NULL;
