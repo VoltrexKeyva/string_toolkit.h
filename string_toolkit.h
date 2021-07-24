@@ -15,6 +15,28 @@
 #define false  0
 #endif
 
+// use void * in C, otherwise use templates for C++
+#ifndef __cplusplus
+#define _free_two_dim_arr(type, arr, length) \
+    __free_two_dim_arr(arr, length)
+
+void __free_two_dim_arr(void ** arr, const unsigned int length) {
+#else
+#define _free_two_dim_arr(type, arr, length) \
+    __free_two_dim_arr<type>(arr, length)
+
+template<typename T>
+void __free_two_dim_arr(T ** arr, const unsigned int length) {
+#endif
+    if (!length)
+        return;
+    
+    for (unsigned int i = 0; i < length; i++)
+        free(arr[i]);
+
+    free(arr);
+}
+
 typedef struct {
     const unsigned int size;
     char ** data;
@@ -52,7 +74,6 @@ st_str_arr st_split(const char * string, const char delimiter) {
         }
         
         if (i != (string_length - 1)) {
-            
             if (string[i] == delimiter && string[i + 1] != delimiter)
                 current_start = i + 1;
         
@@ -77,7 +98,7 @@ st_str_arr st_split(const char * string, const char delimiter) {
     }
     
     if (indices_length < 2) {
-        free(indices);
+        _free_two_dim_arr(unsigned int, indices, indices_length);
         const st_str_arr arr = { 0, NULL };
         return arr;
     }
@@ -104,7 +125,7 @@ st_str_arr st_split(const char * string, const char delimiter) {
         arr.data[i][k] = '\0';
     }
     
-    free(indices);
+    _free_two_dim_arr(unsigned int, indices, indices_length);
     return arr;
 }
 
