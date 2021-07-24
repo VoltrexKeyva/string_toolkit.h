@@ -465,7 +465,7 @@ char * st_progress_bar(
 
 char * st_to_abbreviation(const char * text) {
     char * result = malloc(sizeof(text));
-    unsigned char s = 0;
+    bool s = false;
     unsigned int length = 0;
     
     if (text[0] != ' ') {
@@ -475,14 +475,14 @@ char * st_to_abbreviation(const char * text) {
     
     for (unsigned int i = 0; i < strlen(text); i++) {
         if (text[i] == ' ') {
-            s = 1;
+            s = true;
             continue;
         } else if (s) {
             result[length] = text[i];
             length++;
         }
         
-        s = 0;
+        s = false;
     }
     
     result[length] = '\0';
