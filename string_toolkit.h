@@ -18,7 +18,7 @@
 // use void * in C, otherwise use templates for C++
 #ifndef __cplusplus
 #define _free_two_dim_arr(type, arr, length) \
-    __free_two_dim_arr(arr, length)
+    __free_two_dim_arr((void **)arr, length)
 
 void __free_two_dim_arr(void ** arr, const unsigned int length) {
 #else
