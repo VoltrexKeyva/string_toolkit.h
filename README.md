@@ -1,5 +1,5 @@
 # string_toolkit.h
-A simple C library containing tools to manipulate a C string. Inspired by [string-toolkit by VoltrexMaster](https://github.com/VoltrexMaster/string-toolkit). Everything is contained in the header file so you can just download it.
+A simple C/C++ library containing tools to manipulate a C string. Inspired by [string-toolkit by VoltrexMaster](https://github.com/VoltrexMaster/string-toolkit). Everything is contained in the header file so you can just download it.
 
 All structs, functions, and macro names start with a `st_` prefix.
 
