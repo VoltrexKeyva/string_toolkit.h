@@ -25,7 +25,7 @@
 #define true         1
 #define false        0
 
-void __free_two_dim_arr(void ** arr, const unsigned int length)
+static void __free_two_dim_arr(void ** arr, const unsigned int length)
 #else
 // for C++
 
@@ -36,7 +36,7 @@ void __free_two_dim_arr(void ** arr, const unsigned int length)
 #define _opt_param(name, default) \
     name = default
 
-template<typename T>void __free_two_dim_arr(T ** arr, const unsigned int length)
+template<typename T>static void __free_two_dim_arr(T ** arr, const unsigned int length)
 #endif
 {
     if (!length)
