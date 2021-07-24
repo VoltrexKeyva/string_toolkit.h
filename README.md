@@ -17,6 +17,21 @@ The data returned after retrieving a value from a console flag.
 
 ## Functions
 
+### Repeat a string several times
+Returns `NULL` if the string is empty or if the second argument is `0`.
+```c
+char * repeated_string = st_repeat("Hello", 5);
+// "HelloHelloHelloHelloHello"
+```
+
+### Check if a string start or ends with a specific string
+Self-explanatory.
+```c
+bool a = st_starts_with("Hello", "He");
+
+bool b = st_ends_with("Hello", "lo");
+```
+
 ### Strip a string from a character
 Strips a string from a specific character. Returns `NULL` if the string is empty.
 ```c
@@ -193,18 +208,18 @@ int main(int argc, char ** argv) {
 ## Macros
 ### Check if a character is alphanumberic, or an underscore
 ```c
-const bool a = st_is_alnum('a');
+bool a = st_is_alnum('a');
 // returns 1
 
-const bool b = st_is_alnum('/');
+bool b = st_is_alnum('/');
 // returns 0
 ```
 
 ### Check if a character is a number
 ```c
-const bool a = st_is_num('6');
+bool a = st_is_num('6');
 // returns 1
 
-const bool b = st_is_num('a');
+bool b = st_is_num('a');
 // returns 0
 ```

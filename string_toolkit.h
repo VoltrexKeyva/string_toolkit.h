@@ -47,6 +47,64 @@ void __free_two_dim_arr(T ** arr, const unsigned int length) {
     free(arr);
 }
 
+char * st_repeat(const char * str, const unsigned int amount) {    
+    if (!amount || str[0] == '\0')
+        return NULL;
+    else if (str[1] == '\0') {
+        char * ptr = malloc(amount * sizeof(char));
+        memset(ptr, str[0], amount * sizeof(char));
+        ptr[amount] = '\0';
+        
+        return ptr;
+    }
+    
+    const unsigned int length = strlen(str) * amount;
+    char * ptr = malloc(length * sizeof(char));
+    ptr[length] = '\0';
+    
+    for (unsigned int i = 0; i < length; i += amount) {
+        unsigned int k = 0;
+        for (unsigned int j = i; j < i + amount; j++) {
+            ptr[j] = str[k];
+            k++;
+        }
+    }
+    
+    return ptr;
+}
+
+bool st_starts_with(const char * string, const char * with_what) {
+    const unsigned int length = strlen(with_what);
+    if (length > strlen(string))
+        return false;
+    else if (with_what[0] == '\0' || string[0] == '\0')
+        return true;
+    
+    for (unsigned int i = 0; i < length; i++)
+        if (string[i] != with_what[i])
+            return false;
+    
+    return true;
+}
+
+bool st_ends_with(const char * string, const char * with_what) {
+    const unsigned int length = strlen(with_what);
+    if (length > strlen(string))
+        return false;
+    else if (with_what[0] == '\0' || string[0] == '\0')
+        return true;
+    
+    int j = strlen(string) - 1;
+    for (int i = length - 1; i >= 0; i--) {
+        if (string[j] != with_what[i])
+            return false;
+        
+        j--;
+    }
+    
+    return true;
+}
+
 typedef struct {
     const unsigned int size;
     char ** data;
