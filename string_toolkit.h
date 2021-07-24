@@ -10,20 +10,25 @@
     t > 47 && t < 58
 
 #ifndef __cplusplus
+// C
+
+#define _free_two_dim_arr(type, arr, length) \
+    __free_two_dim_arr((void **)arr, length)
+#define _allocate_memory(type, size) \
+    malloc(size)
+
 #define bool   unsigned char
 #define true   1
 #define false  0
-#endif
-
-// use void * in C, otherwise use templates for C++
-#ifndef __cplusplus
-#define _free_two_dim_arr(type, arr, length) \
-    __free_two_dim_arr((void **)arr, length)
 
 void __free_two_dim_arr(void ** arr, const unsigned int length) {
 #else
+// C++
+
 #define _free_two_dim_arr(type, arr, length) \
     __free_two_dim_arr<type>(arr, length)
+#define _allocate_memory(type, size) \
+    (type)malloc(size)
 
 template<typename T>
 void __free_two_dim_arr(T ** arr, const unsigned int length) {
@@ -49,7 +54,7 @@ st_str_arr st_split(const char * string, const char delimiter) {
         return arr;
     }
     
-    unsigned int ** indices = malloc(string_length * sizeof(unsigned int *));
+    unsigned int ** indices = _allocate_memory(unsigned int **, string_length * sizeof(unsigned int *));
     unsigned int indices_length = 0;
     bool start_match = false;
     
@@ -61,7 +66,7 @@ st_str_arr st_split(const char * string, const char delimiter) {
                 start_match = true;
                 
                 if (string[i + 1] == delimiter) {
-                    indices[indices_length] = malloc(2 * sizeof(unsigned int));
+                    indices[indices_length] = _allocate_memory(unsigned int *, 2 * sizeof(unsigned int));
                     indices[indices_length][0] = i;
                     indices[indices_length][1] = i;
                     
@@ -78,7 +83,7 @@ st_str_arr st_split(const char * string, const char delimiter) {
                 current_start = i + 1;
         
             else if (string[i] != delimiter && string[i + 1] == delimiter) {
-                indices[indices_length] = malloc(2 * sizeof(unsigned int));
+                indices[indices_length] = _allocate_memory(unsigned int *, 2 * sizeof(unsigned int));
                 indices[indices_length][0] = current_start == -1 ? i : (unsigned int)current_start;
                 indices[indices_length][1] = i;
                 indices_length++;
@@ -90,7 +95,7 @@ st_str_arr st_split(const char * string, const char delimiter) {
         }
         
         if (current_start != -1) {
-            indices[indices_length] = malloc(2 * sizeof(unsigned int));
+            indices[indices_length] = _allocate_memory(unsigned int *, 2 * sizeof(unsigned int));
             indices[indices_length][0] = (unsigned int)current_start;
             indices[indices_length][1] = string_length - 1;
             indices_length++;
@@ -104,17 +109,17 @@ st_str_arr st_split(const char * string, const char delimiter) {
     }
     
     st_str_arr arr = { indices_length };
-    arr.data = malloc(indices_length * sizeof(char *));
+    arr.data = _allocate_memory(char **, indices_length * sizeof(char *));
     
     for (unsigned int i = 0; i < indices_length; i++) {
         if (indices[i][0] == indices[i][1]) {
-            arr.data[i] = malloc(2 * sizeof(char));
+            arr.data[i] = _allocate_memory(char *, 2 * sizeof(char));
             arr.data[i][0] = string[indices[i][0]];
             arr.data[i][1] = '\0';
             continue;
         }
         
-        arr.data[i] = malloc((indices[i][1] - indices[i][0] + 1) * sizeof(char));
+        arr.data[i] = _allocate_memory(char *, (indices[i][1] - indices[i][0] + 1) * sizeof(char));
         
         unsigned int k = 0;
         for (unsigned int j = indices[i][0]; j <= indices[i][1]; j++) {
@@ -139,13 +144,13 @@ st_str_arr st_to_chunks(const char * string, const unsigned int chunk_by) {
     const unsigned int array_length = ceil((double)string_length / (double)chunk_by);
     st_str_arr output = { array_length };
     
-    output.data = malloc(array_length * sizeof(char *));
+    output.data = _allocate_memory(char **, array_length * sizeof(char *));
     
     unsigned int j = 0;
     for (unsigned int i = 0; i < array_length; i++) {
         // won't overload
         if ((j + chunk_by) <= string_length) {
-            output.data[i] = malloc(chunk_by * sizeof(char));
+            output.data[i] = _allocate_memory(char *, chunk_by * sizeof(char));
             output.data[i][chunk_by] = '\0';
             
             const unsigned int l = j + chunk_by;
@@ -160,7 +165,7 @@ st_str_arr st_to_chunks(const char * string, const unsigned int chunk_by) {
         
         // will overload
         const unsigned int l = string_length - j;
-        output.data[i] = malloc(l * sizeof(char));
+        output.data[i] = _allocate_memory(char *, l * sizeof(char));
         output.data[i][l] = '\0';
     
         unsigned int k = 0;
@@ -180,7 +185,7 @@ char * st_substr(const char * string, unsigned int a, unsigned int b) {
     if (!b)
         b = strlen(string) - a;
     
-    char * ptr = malloc(b * sizeof(char));
+    char * ptr = _allocate_memory(char *, b * sizeof(char));
     
     const unsigned int max = a + b;
     unsigned int i = 0;
@@ -197,7 +202,7 @@ char * st_get_content_no_flags(const unsigned int argc, char ** argv) {
     if (argc < 2 || (strlen(argv[0]) > 2 && argv[0][0] == '-' && argv[0][1] == '-'))
         return NULL;
     
-    unsigned int * indices = malloc(argc * sizeof(unsigned int));
+    unsigned int * indices = _allocate_memory(unsigned int *, argc * sizeof(unsigned int));
     unsigned int indices_length = 0;
     unsigned int size = 0;
     
@@ -216,7 +221,7 @@ char * st_get_content_no_flags(const unsigned int argc, char ** argv) {
         return NULL;
     }
     
-    char * ptr = malloc(size);
+    char * ptr = _allocate_memory(char *, size);
     ptr[(size / sizeof(char)) - 1] = '\0';
     
     unsigned int index = 0;
@@ -251,7 +256,7 @@ char * st_get_content_no_options(const unsigned int argc, char ** argv) {
         size += (strlen(argv[i]) + 1) * sizeof(char);
     }
     
-    char * ptr = malloc(size);
+    char * ptr = _allocate_memory(char *, size);
     ptr[(size / sizeof(char)) - 1] = '\0';
     
     unsigned int index = 0;
@@ -282,7 +287,7 @@ st_flag_data st_flag_get_value(const unsigned int argc, char ** argv, const char
         return output;
     }
 
-    char * key_ptr = malloc((2 + strlen(key)) * sizeof(char));
+    char * key_ptr = _allocate_memory(char *, (2 + strlen(key)) * sizeof(char));
     memset(key_ptr, '-', 2 * sizeof(char));
     
     for (unsigned int i = 0; i < strlen(key); i++)
@@ -318,7 +323,7 @@ st_flag_data st_flag_get_value(const unsigned int argc, char ** argv, const char
         return output;
     
     if (size) {
-        output.value = malloc(size);
+        output.value = _allocate_memory(char *, size);
         output.value[size / sizeof(char)] = '\0';
         
         unsigned int index = 0;
@@ -343,7 +348,7 @@ char * st_shorten(const char * string, const unsigned int limit, const char * pl
         return NULL;
     
     const unsigned int placeholder_length = placeholder == NULL ? 3 : strlen(placeholder);
-    char * ptr = malloc((1 + limit + placeholder_length) * sizeof(char));
+    char * ptr = _allocate_memory(char *, (1 + limit + placeholder_length) * sizeof(char));
     for (unsigned int i = 0; i < limit; i++)
         ptr[i] = string[i];
     
@@ -370,7 +375,7 @@ char * st_dynamic_concat(const unsigned int amount, ...) {
     
     va_end(vl1);
     
-    char * ptr = malloc(bytes);
+    char * ptr = _allocate_memory(char *, bytes);
     
     va_list vl2;
     va_start(vl2, amount);
@@ -471,7 +476,7 @@ char * st_progress_bar(
     const unsigned int available = floor((in_total / total) * bar_length);
     const unsigned int remaining_length = bar_length - (available + (available == bar_length ? 0 : 1));
 
-    char * result = malloc((1 * sizeof(char)) + (available * sizeof(char)) + (remaining_length * sizeof(char)));
+    char * result = _allocate_memory(char *, (1 * sizeof(char)) + (available * sizeof(char)) + (remaining_length * sizeof(char)));
     result[sizeof(result) / sizeof(char)] = '\0';
     
     memset(result, elapsed_char, available * sizeof(char));
@@ -485,7 +490,7 @@ char * st_progress_bar(
 }
 
 char * st_to_abbreviation(const char * text) {
-    char * result = malloc(sizeof(text));
+    char * result = _allocate_memory(char *, sizeof(text));
     bool s = false;
     unsigned int length = 0;
     
