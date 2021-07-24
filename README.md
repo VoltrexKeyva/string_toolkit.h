@@ -54,7 +54,7 @@ Slices a string like so. Returns `NULL` if the sum of both numbers is equal or m
 char * sub_string = st_substr("Super awesome!", 6, 7);
 // outputs "awesome"
 ```
-\*in C++, the third parameter is optional, and it defaults to `0`.
+> in C++, the third parameter is optional, and it defaults to `0`.
 
 ### Convert string to abbreviation
 Converts the string to the abbreviation for it. e.g: `Hello, World!` to `HW`. Returns `NULL` if the string length is less than `2`.
@@ -63,7 +63,12 @@ char * abbreviation = st_to_abbreviation("Hello, World!");
 ```
 
 ### Create a progress-bar
-Creates a progress-bar-like string. Returns `NULL` if the last parameter is `0`.
+Creates a progress-bar-like string. Returns `NULL` if:
+- The second parameter is less than the first one,
+- The second parameter is `0`,
+- The first or second parameter is less than `0`, or
+- The last parameter is `0`.
+
 ```c
 // create a 50%-like progress bar
 char * progress = st_progress_bar(
@@ -108,7 +113,7 @@ bool has_custom_emoji2 = st_has_custom_emoji("This is a text <a:something:666666
 ```
 
 ### Dynamically concatenate two or more strings together
-Like `strcat` but you can specify more than two strings, and you don't need to specify the fixed string length for the result. Returns `NULL` if one of the strings specified are empty.
+Like `strcat` but you can specify more than two strings, and you don't need to specify the fixed string length for the result. Returns `NULL` if one of the strings specified is empty.
 ```c
 char * cat = st_dynamic_concat(3, "Something", " super ", "awesome!");
 // returns "Something super awesome!"
@@ -131,7 +136,7 @@ char * null = st_shorten("Something", 999, NULL);
 char * custom_placeholder = st_shorten("Something", 4, "???");
 // returns "Some???"
 ```
-\*in C++, the third parameter is optional, and it defaults to `NULL`.
+> in C++, the third parameter is optional, and it defaults to `NULL`.
 
 ### Get console arguments without any options.
 Filters things like `./a.out argument some text --arg1 wow --arg2 so fun` to `argument some text`.

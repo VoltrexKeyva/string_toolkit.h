@@ -518,7 +518,7 @@ char * st_progress_bar(
     const char elapsed_char, const char progress_char,
     const char empty_char, const unsigned int bar_length
 ) {
-    if (!bar_length)
+    if (in_total < 0 || total < 1 || in_total > total || !bar_length)
         return NULL;
     
     const unsigned int available = floor((in_total / total) * bar_length);
