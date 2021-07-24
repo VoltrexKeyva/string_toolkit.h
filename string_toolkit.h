@@ -555,6 +555,9 @@ bool st_has_custom_emoji(char text[]) {
 }
 
 void st_proper_case(char text[]) {
+    if (text[0] == '\0')
+        return;
+    
     bool s = false;
     unsigned int i = 0;
     
@@ -576,11 +579,17 @@ void st_proper_case(char text[]) {
 }
 
 void st_mock(char text[]) {
+    if (text[0] == '\0')
+        return;
+    
     for (unsigned int i = 0; i < strlen(text); i += 2)
         text[i] = toupper(text[i]);
 }
 
 void st_scramble(char text[]) {
+    if (text[0] == '\0')
+        return;
+    
     const unsigned int length = strlen(text);
     if (length == 1)
         return;
