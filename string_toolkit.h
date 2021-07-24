@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+#include <stdio.h>
 
 #define st_is_alnum(t) \
     (t > 47 && t < 58) || (t > 96 && t < 123) || (t > 64 && t < 91) || t == 95
@@ -16,6 +17,8 @@
     __free_two_dim_arr((void **)arr, length)
 #define _allocate_memory(type, size) \
     malloc(size)
+#define _opt_param(name, default) \
+    name
 
 #define bool   unsigned char
 #define true   1
@@ -29,6 +32,8 @@ void __free_two_dim_arr(void ** arr, const unsigned int length) {
     __free_two_dim_arr<type>(arr, length)
 #define _allocate_memory(type, size) \
     (type)malloc(size)
+#define _opt_param(name, default) \
+    name = default
 
 template<typename T>
 void __free_two_dim_arr(T ** arr, const unsigned int length) {
@@ -178,8 +183,43 @@ st_str_arr st_to_chunks(const char * string, const unsigned int chunk_by) {
     return output;
 }
 
-char * st_substr(const char * string, unsigned int a, unsigned int b) {
-    if ((a + b) >= strlen(string))
+char * st_strip(const char * string, const char strip_char) {
+    if (string[0] == '\0')
+        return NULL;
+    
+    const unsigned int length = strlen(string);
+    unsigned int start = 0;
+    unsigned int end = length - 1;
+    
+    for (unsigned int i = 0; i < length; i++)
+        if (string[i] != strip_char) {
+            start = i;
+            break;
+        }
+    
+    for (unsigned int i = length - 1; i != 0; i--)
+        if (string[i] != strip_char) {
+            end = i;
+            break;
+        }
+    
+    if (start == 0 && end == (length - 1))
+        return NULL;
+    
+    char * ptr = _allocate_memory(char *, (end - start + 1) * sizeof(char));
+    ptr[end] = '\0';
+    
+    unsigned int index = 0;
+    for (unsigned int i = start; i < end; i++) {
+        ptr[index] = string[i];
+        index++;
+    }
+    
+    return ptr;
+}
+
+char * st_substr(const char * string, unsigned int a, _opt_param(unsigned int b, 0)) {
+    if (string[0] == '\0' || (a + b) >= strlen(string))
         return NULL;
     
     if (!b)
@@ -343,8 +383,8 @@ st_flag_data st_flag_get_value(const unsigned int argc, char ** argv, const char
     return output;
 }
 
-char * st_shorten(const char * string, const unsigned int limit, const char * placeholder) {
-    if (strlen(string) <= limit)
+char * st_shorten(const char * string, const unsigned int limit, _opt_param(const char * placeholder, NULL)) {
+    if (string[0] == '\0' || !limit || strlen(string) <= limit)
         return NULL;
     
     const unsigned int placeholder_length = placeholder == NULL ? 3 : strlen(placeholder);
@@ -370,6 +410,8 @@ char * st_dynamic_concat(const unsigned int amount, ...) {
     
     for (unsigned int i = 0; i < amount; i++) {
         const char * arg = va_arg(vl1, const char *);
+        if (arg[0] == '\0')
+            return NULL;
         bytes += strlen(arg) * sizeof(char);
     }
     
@@ -396,6 +438,9 @@ char * st_dynamic_concat(const unsigned int amount, ...) {
 }
 
 bool st_has_custom_emoji(char text[]) {
+    if (strlen(text) < 23)
+        return false;
+    
     unsigned char s = 0; // status
     unsigned char nc = 0; // number count
     bool ia = false; // is animated
@@ -473,6 +518,9 @@ char * st_progress_bar(
     const char elapsed_char, const char progress_char,
     const char empty_char, const unsigned int bar_length
 ) {
+    if (!bar_length)
+        return NULL;
+    
     const unsigned int available = floor((in_total / total) * bar_length);
     const unsigned int remaining_length = bar_length - (available + (available == bar_length ? 0 : 1));
 
@@ -490,6 +538,9 @@ char * st_progress_bar(
 }
 
 char * st_to_abbreviation(const char * text) {
+    if (strlen(text) < 2)
+        return NULL;
+    
     char * result = _allocate_memory(char *, sizeof(text));
     bool s = false;
     unsigned int length = 0;

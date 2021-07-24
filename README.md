@@ -17,6 +17,13 @@ The data returned after retrieving a value from a console flag.
 
 ## Functions
 
+### Strip a string from a character
+Strips a string from a specific character. Returns `NULL` if the string is empty.
+```c
+char * text = st_strip(" text ", ' ');
+// "text"
+```
+
 ### Split a string by a character
 Splits the string by a character delimiter. Returns a [`st_str_arr`](#st_str_arr) struct, as follows.
 ```c
@@ -47,15 +54,16 @@ Slices a string like so. Returns `NULL` if the sum of both numbers is equal or m
 char * sub_string = st_substr("Super awesome!", 6, 7);
 // outputs "awesome"
 ```
+\*in C++, the third parameter is optional, and it defaults to `0`.
 
 ### Convert string to abbreviation
-Converts the string to the abbreviation for it. e.g: `Hello, World!` to `HW`
+Converts the string to the abbreviation for it. e.g: `Hello, World!` to `HW`. Returns `NULL` if the string length is less than `2`.
 ```c
 char * abbreviation = st_to_abbreviation("Hello, World!");
 ```
 
 ### Create a progress-bar
-Creates a progress-bar-like string.
+Creates a progress-bar-like string. Returns `NULL` if the last parameter is `0`.
 ```c
 // create a 50%-like progress bar
 char * progress = st_progress_bar(
@@ -92,22 +100,27 @@ st_proper_case(string);
 ### Check if a string contains a discord custom emoji
 A discord custom emoji can be `<:emoji_name:emoji_id>` or `<a:emoji_name:emoji_id>`. This function validates if the specified string contains them.
 ```c
-int has_custom_emoji1 = st_has_custom_emoji("This is a text");
+bool has_custom_emoji1 = st_has_custom_emoji("This is a text");
 // returns 0
 
-int has_custom_emoji2 = st_has_custom_emoji("This is a text <a:something:66666666666666666>");
+bool has_custom_emoji2 = st_has_custom_emoji("This is a text <a:something:66666666666666666>");
 // returns 1
 ```
 
 ### Dynamically concatenate two or more strings together
-Like `strcat` but you can specify more than two strings, and you don't need to specify the fixed string length for the result.
+Like `strcat` but you can specify more than two strings, and you don't need to specify the fixed string length for the result. Returns `NULL` if one of the strings specified are empty.
 ```c
 char * cat = st_dynamic_concat(3, "Something", " super ", "awesome!");
 // returns "Something super awesome!"
 ```
 
 ### Shorten a string
-Shortens a string, returns `NULL` if the specified string length is lower or equal to the specified limit. You can also specify your own placeholder for the suffix. If the placeholder is `NULL` then it would refer to default (`...`)
+Shortens a string, returns `NULL` if:
+- the specified string length is lower or equal to the specified limit,
+- the specified string is empty, or
+- the specified limit is `0`.
+
+You can also specify your own placeholder for the suffix. If the placeholder is `NULL` then it would refer to default (`...`)
 ```c
 char * shortened = st_shorten("Something", 4, NULL);
 // returns "Some..."
@@ -118,7 +131,7 @@ char * null = st_shorten("Something", 999, NULL);
 char * custom_placeholder = st_shorten("Something", 4, "???");
 // returns "Some???"
 ```
-
+\*in C++, the third parameter is optional, and it defaults to `NULL`.
 
 ### Get console arguments without any options.
 Filters things like `./a.out argument some text --arg1 wow --arg2 so fun` to `argument some text`.
