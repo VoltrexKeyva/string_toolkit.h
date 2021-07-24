@@ -3,15 +3,16 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
-#include <stdio.h>
 
 #define st_is_alnum(t) \
     (t > 47 && t < 58) || (t > 96 && t < 123) || (t > 64 && t < 91) || t == 95
 #define st_is_num(t) \
     t > 47 && t < 58
+#define _trim_arr(_t, _a, _ns, _na) \
+    _na = (_t *)malloc(_ns * sizeof(_t)); for (unsigned int __i = 0; __i < _ns; __i++) _na[__i] = _a[__i]; free(_a)
 
 #ifndef __cplusplus
-// C
+// for C
 
 #define _free_two_dim_arr(type, arr, length) \
     __free_two_dim_arr((void **)arr, length)
@@ -20,13 +21,13 @@
 #define _opt_param(name, default) \
     name
 
-#define bool   unsigned char
-#define true   1
-#define false  0
+#define bool         unsigned char
+#define true         1
+#define false        0
 
-void __free_two_dim_arr(void ** arr, const unsigned int length) {
+void __free_two_dim_arr(void ** arr, const unsigned int length)
 #else
-// C++
+// for C++
 
 #define _free_two_dim_arr(type, arr, length) \
     __free_two_dim_arr<type>(arr, length)
@@ -35,9 +36,9 @@ void __free_two_dim_arr(void ** arr, const unsigned int length) {
 #define _opt_param(name, default) \
     name = default
 
-template<typename T>
-void __free_two_dim_arr(T ** arr, const unsigned int length) {
+template<typename T>void __free_two_dim_arr(T ** arr, const unsigned int length)
 #endif
+{
     if (!length)
         return;
     
@@ -47,11 +48,44 @@ void __free_two_dim_arr(T ** arr, const unsigned int length) {
     free(arr);
 }
 
+typedef struct {
+    const unsigned int size;
+    unsigned int * data;
+} st_uint_arr;
+
+st_uint_arr st_get_indexes(const char * str, const char character) {
+    if (str[0] == '\0') {
+        const st_uint_arr arr = { 0, NULL };
+        return arr;
+    }
+    
+    unsigned int * ptrl = _allocate_memory(unsigned int *, strlen(str) * sizeof(unsigned int));
+    unsigned int size = 0;
+    
+    for (unsigned int i = 0; i < strlen(str); i++)
+        if (str[i] == character) {
+            ptrl[size] = i;
+            size++;
+        }
+    
+    if (!size) {
+        free(ptrl);
+        const st_uint_arr arr = { 0, NULL };
+        return arr;
+    }
+    
+    st_uint_arr arr = { size };
+    if (size != strlen(str))
+        _trim_arr(unsigned int, ptrl, size, arr.data);
+    
+    return arr;
+}
+
 char * st_repeat(const char * str, const unsigned int amount) {    
     if (!amount || str[0] == '\0')
         return NULL;
     else if (str[1] == '\0') {
-        char * ptr = malloc(amount * sizeof(char));
+        char * ptr = _allocate_memory(char *, amount * sizeof(char));
         memset(ptr, str[0], amount * sizeof(char));
         ptr[amount] = '\0';
         
@@ -59,7 +93,7 @@ char * st_repeat(const char * str, const unsigned int amount) {
     }
     
     const unsigned int length = strlen(str) * amount;
-    char * ptr = malloc(length * sizeof(char));
+    char * ptr = _allocate_memory(char *, length * sizeof(char));
     ptr[length] = '\0';
     
     for (unsigned int i = 0; i < length; i += amount) {
@@ -87,22 +121,10 @@ bool st_starts_with(const char * string, const char * with_what) {
     return true;
 }
 
-bool st_ends_with(const char * string, const char * with_what) {
-    const unsigned int length = strlen(with_what);
-    if (length > strlen(string))
-        return false;
-    else if (with_what[0] == '\0' || string[0] == '\0')
-        return true;
-    
-    int j = strlen(string) - 1;
-    for (int i = length - 1; i >= 0; i--) {
-        if (string[j] != with_what[i])
-            return false;
-        
-        j--;
-    }
-    
-    return true;
+bool st_ends_with(char * string, char * with_what) {
+    strrev(string);
+    strrev(with_what);
+    return st_starts_with(string, with_what);
 }
 
 typedef struct {

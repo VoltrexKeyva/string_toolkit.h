@@ -9,6 +9,11 @@ Represents an array of strings.
 - `char ** data` The array. Can be `NULL` if the size below is `0`.
 - `const unsigned int size` The array size.
 
+### `st_uint_arr`
+Represents a dynamically allocated unsigned integer array. Similar to the struct above.
+- `unsigned int * data` The array. Can be `NULL` if the size below is `0`.
+- `const unsigned int size` The array size.
+
 ### `st_flag_data`
 The data returned after retrieving a value from a console flag.
 - `char * value` The string value. Could be `NULL` if the one or more booleans below are not `1`.
@@ -16,6 +21,18 @@ The data returned after retrieving a value from a console flag.
 - `const bool has_value` A boolean that tells whether the flag has any value or not. Can be `0` if things like `--flag --flag2` happened.
 
 ## Functions
+
+### Return a list of indexes matching a character
+Returns a [`st_uint_arr`](#st_uint_arr) struct. Array returned can be empty if the provided string is empty or if the character does not exist in the string.
+```c
+st_uint_arr indexes = st_get_indexes("Hello, World!", 'l');
+
+if (indexes.data != NULL) {
+    for (unsigned int i = 0; i < indexes.size; i++) {
+        printf("%d\n", indexes.data[i]);
+    }
+}
+```
 
 ### Repeat a string several times
 Returns `NULL` if the string is empty or if the second argument is `0`.
