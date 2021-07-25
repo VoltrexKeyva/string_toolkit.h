@@ -3,11 +3,6 @@ A simple C/C++ library containing tools to manipulate a C string. Inspired by [s
 
 All typedefs, structs, functions, and macros start with a `st_` prefix.
 
-> If you want to use 64-bit integers as the default integer type, you can do this before including it on your code;
-> ```c
-#define ST_64
-#include "string_toolkit.h"
-```
 
 ## Type definitions
 ### `st_int`
