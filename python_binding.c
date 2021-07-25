@@ -1,6 +1,7 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
+#define ST_64
 #include "string_toolkit.h"
 
 static PyObject * proper_case(PyObject * self, PyObject * args) {

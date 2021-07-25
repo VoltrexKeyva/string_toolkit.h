@@ -9,7 +9,20 @@
 #define st_is_num(t) \
     t > 47 && t < 58
 #define _trim_arr(_t, _a, _ns, _na) \
-    _na = (_t *)malloc(_ns * sizeof(_t)); for (unsigned int __i = 0; __i < _ns; __i++) _na[__i] = _a[__i]; free(_a)
+    _na = (_t *)malloc(_ns * sizeof(_t)); for (st_uint __i = 0; __i < _ns; __i++) _na[__i] = _a[__i]; free(_a)
+
+#ifdef ST_64
+
+typedef unsigned long long st_uint;
+typedef long long st_int;
+#undef ST_64
+
+#else
+
+typedef unsigned int st_uint;
+typedef int st_int;
+
+#endif
 
 #ifndef __cplusplus
 // for C
@@ -25,7 +38,7 @@
 #define true         1
 #define false        0
 
-static void __free_two_dim_arr(void ** arr, const unsigned int length)
+static void __free_two_dim_arr(void ** arr, const st_uint length)
 #else
 // for C++
 
@@ -36,21 +49,21 @@ static void __free_two_dim_arr(void ** arr, const unsigned int length)
 #define _opt_param(name, default) \
     name = default
 
-template<typename T>static void __free_two_dim_arr(T ** arr, const unsigned int length)
+template<typename T>static void __free_two_dim_arr(T ** arr, const st_uint length)
 #endif
 {
     if (!length)
         return;
     
-    for (unsigned int i = 0; i < length; i++)
+    for (st_uint i = 0; i < length; i++)
         free(arr[i]);
 
     free(arr);
 }
 
 typedef struct {
-    const unsigned int size;
-    unsigned int * data;
+    const st_uint size;
+    st_uint * data;
 } st_uint_arr;
 
 st_uint_arr st_get_indexes(const char * str, const char character) {
@@ -59,10 +72,10 @@ st_uint_arr st_get_indexes(const char * str, const char character) {
         return arr;
     }
     
-    unsigned int * ptrl = _allocate_memory(unsigned int *, strlen(str) * sizeof(unsigned int));
-    unsigned int size = 0;
+    st_uint * ptrl = _allocate_memory(st_uint *, strlen(str) * sizeof(st_uint));
+    st_uint size = 0;
     
-    for (unsigned int i = 0; i < strlen(str); i++)
+    for (st_uint i = 0; i < strlen(str); i++)
         if (str[i] == character) {
             ptrl[size] = i;
             size++;
@@ -76,12 +89,12 @@ st_uint_arr st_get_indexes(const char * str, const char character) {
     
     st_uint_arr arr = { size };
     if (size != strlen(str))
-        _trim_arr(unsigned int, ptrl, size, arr.data);
+        _trim_arr(st_uint, ptrl, size, arr.data);
     
     return arr;
 }
 
-char * st_repeat(const char * str, const unsigned int amount) {    
+char * st_repeat(const char * str, const st_uint amount) {    
     if (!amount || str[0] == '\0')
         return NULL;
     else if (str[1] == '\0') {
@@ -92,13 +105,13 @@ char * st_repeat(const char * str, const unsigned int amount) {
         return ptr;
     }
     
-    const unsigned int length = strlen(str) * amount;
+    const st_uint length = strlen(str) * amount;
     char * ptr = _allocate_memory(char *, length * sizeof(char));
     ptr[length] = '\0';
     
-    for (unsigned int i = 0; i < length; i += amount) {
-        unsigned int k = 0;
-        for (unsigned int j = i; j < i + amount; j++) {
+    for (st_uint i = 0; i < length; i += amount) {
+        st_uint k = 0;
+        for (st_uint j = i; j < i + amount; j++) {
             ptr[j] = str[k];
             k++;
         }
@@ -108,13 +121,13 @@ char * st_repeat(const char * str, const unsigned int amount) {
 }
 
 bool st_starts_with(const char * string, const char * with_what) {
-    const unsigned int length = strlen(with_what);
+    const st_uint length = strlen(with_what);
     if (length > strlen(string))
         return false;
     else if (with_what[0] == '\0' || string[0] == '\0')
         return true;
     
-    for (unsigned int i = 0; i < length; i++)
+    for (st_uint i = 0; i < length; i++)
         if (string[i] != with_what[i])
             return false;
     
@@ -128,30 +141,30 @@ bool st_ends_with(char * string, char * with_what) {
 }
 
 typedef struct {
-    const unsigned int size;
+    const st_uint size;
     char ** data;
 } st_str_arr;
 
 st_str_arr st_split(const char * string, const char delimiter) {
-    const unsigned int string_length = strlen(string);
+    const st_uint string_length = strlen(string);
     if (string_length < 3) {
         const st_str_arr arr = { 0, NULL };
         return arr;
     }
     
-    unsigned int ** indices = _allocate_memory(unsigned int **, string_length * sizeof(unsigned int *));
-    unsigned int indices_length = 0;
+    st_uint ** indices = _allocate_memory(st_uint **, string_length * sizeof(st_uint *));
+    st_uint indices_length = 0;
     bool start_match = false;
     
-    int current_start = -1;
+    st_int current_start = -1;
     
-    for (unsigned int i = 0; i < string_length; i++) {
+    for (st_uint i = 0; i < string_length; i++) {
         if (!start_match) {
             if (string[i] != delimiter) {
                 start_match = true;
                 
                 if (string[i + 1] == delimiter) {
-                    indices[indices_length] = _allocate_memory(unsigned int *, 2 * sizeof(unsigned int));
+                    indices[indices_length] = _allocate_memory(st_uint *, 2 * sizeof(st_uint));
                     indices[indices_length][0] = i;
                     indices[indices_length][1] = i;
                     
@@ -168,8 +181,8 @@ st_str_arr st_split(const char * string, const char delimiter) {
                 current_start = i + 1;
         
             else if (string[i] != delimiter && string[i + 1] == delimiter) {
-                indices[indices_length] = _allocate_memory(unsigned int *, 2 * sizeof(unsigned int));
-                indices[indices_length][0] = current_start == -1 ? i : (unsigned int)current_start;
+                indices[indices_length] = _allocate_memory(st_uint *, 2 * sizeof(st_uint));
+                indices[indices_length][0] = current_start == -1 ? i : (st_uint)current_start;
                 indices[indices_length][1] = i;
                 indices_length++;
                 
@@ -180,15 +193,15 @@ st_str_arr st_split(const char * string, const char delimiter) {
         }
         
         if (current_start != -1) {
-            indices[indices_length] = _allocate_memory(unsigned int *, 2 * sizeof(unsigned int));
-            indices[indices_length][0] = (unsigned int)current_start;
+            indices[indices_length] = _allocate_memory(st_uint *, 2 * sizeof(st_uint));
+            indices[indices_length][0] = (st_uint)current_start;
             indices[indices_length][1] = string_length - 1;
             indices_length++;
         }
     }
     
     if (indices_length < 2) {
-        _free_two_dim_arr(unsigned int, indices, indices_length);
+        _free_two_dim_arr(st_uint, indices, indices_length);
         const st_str_arr arr = { 0, NULL };
         return arr;
     }
@@ -196,7 +209,7 @@ st_str_arr st_split(const char * string, const char delimiter) {
     st_str_arr arr = { indices_length };
     arr.data = _allocate_memory(char **, indices_length * sizeof(char *));
     
-    for (unsigned int i = 0; i < indices_length; i++) {
+    for (st_uint i = 0; i < indices_length; i++) {
         if (indices[i][0] == indices[i][1]) {
             arr.data[i] = _allocate_memory(char *, 2 * sizeof(char));
             arr.data[i][0] = string[indices[i][0]];
@@ -206,8 +219,8 @@ st_str_arr st_split(const char * string, const char delimiter) {
         
         arr.data[i] = _allocate_memory(char *, (indices[i][1] - indices[i][0] + 1) * sizeof(char));
         
-        unsigned int k = 0;
-        for (unsigned int j = indices[i][0]; j <= indices[i][1]; j++) {
+        st_uint k = 0;
+        for (st_uint j = indices[i][0]; j <= indices[i][1]; j++) {
             arr.data[i][k] = string[j];
             k++;
         }
@@ -215,31 +228,31 @@ st_str_arr st_split(const char * string, const char delimiter) {
         arr.data[i][k] = '\0';
     }
     
-    _free_two_dim_arr(unsigned int, indices, indices_length);
+    _free_two_dim_arr(st_uint, indices, indices_length);
     return arr;
 }
 
-st_str_arr st_to_chunks(const char * string, const unsigned int chunk_by) {
-    const unsigned int string_length = strlen(string);
+st_str_arr st_to_chunks(const char * string, const st_uint chunk_by) {
+    const st_uint string_length = strlen(string);
     if (chunk_by >= string_length) {
         const st_str_arr arr = { 0, NULL };
         return arr;
     }
     
-    const unsigned int array_length = ceil((double)string_length / (double)chunk_by);
+    const st_uint array_length = ceil((double)string_length / (double)chunk_by);
     st_str_arr output = { array_length };
     
     output.data = _allocate_memory(char **, array_length * sizeof(char *));
     
-    unsigned int j = 0;
-    for (unsigned int i = 0; i < array_length; i++) {
+    st_uint j = 0;
+    for (st_uint i = 0; i < array_length; i++) {
         // won't overload
         if ((j + chunk_by) <= string_length) {
             output.data[i] = _allocate_memory(char *, chunk_by * sizeof(char));
             output.data[i][chunk_by] = '\0';
             
-            const unsigned int l = j + chunk_by;
-            unsigned int k = 0;
+            const st_uint l = j + chunk_by;
+            st_uint k = 0;
             for (; j < l; j++) {
                 output.data[i][k] = string[j];
                 k++;
@@ -249,11 +262,11 @@ st_str_arr st_to_chunks(const char * string, const unsigned int chunk_by) {
         }
         
         // will overload
-        const unsigned int l = string_length - j;
+        const st_uint l = string_length - j;
         output.data[i] = _allocate_memory(char *, l * sizeof(char));
         output.data[i][l] = '\0';
     
-        unsigned int k = 0;
+        st_uint k = 0;
         for (; j < string_length; j++) {
             output.data[i][k] = string[j];
             k++;
@@ -267,17 +280,17 @@ char * st_strip(const char * string, const char strip_char) {
     if (string[0] == '\0')
         return NULL;
     
-    const unsigned int length = strlen(string);
-    unsigned int start = 0;
-    unsigned int end = length - 1;
+    const st_uint length = strlen(string);
+    st_uint start = 0;
+    st_uint end = length - 1;
     
-    for (unsigned int i = 0; i < length; i++)
+    for (st_uint i = 0; i < length; i++)
         if (string[i] != strip_char) {
             start = i;
             break;
         }
     
-    for (unsigned int i = length - 1; i != 0; i--)
+    for (st_uint i = length - 1; i != 0; i--)
         if (string[i] != strip_char) {
             end = i;
             break;
@@ -289,8 +302,8 @@ char * st_strip(const char * string, const char strip_char) {
     char * ptr = _allocate_memory(char *, (end - start + 1) * sizeof(char));
     ptr[end] = '\0';
     
-    unsigned int index = 0;
-    for (unsigned int i = start; i < end; i++) {
+    st_uint index = 0;
+    for (st_uint i = start; i < end; i++) {
         ptr[index] = string[i];
         index++;
     }
@@ -298,7 +311,7 @@ char * st_strip(const char * string, const char strip_char) {
     return ptr;
 }
 
-char * st_substr(const char * string, unsigned int a, _opt_param(unsigned int b, 0)) {
+char * st_substr(const char * string, st_uint a, _opt_param(st_uint b, 0)) {
     if (string[0] == '\0' || (a + b) >= strlen(string))
         return NULL;
     
@@ -307,8 +320,8 @@ char * st_substr(const char * string, unsigned int a, _opt_param(unsigned int b,
     
     char * ptr = _allocate_memory(char *, b * sizeof(char));
     
-    const unsigned int max = a + b;
-    unsigned int i = 0;
+    const st_uint max = a + b;
+    st_uint i = 0;
     for (; a < max; a++) {
         ptr[i] = string[a];
         i++;
@@ -318,15 +331,15 @@ char * st_substr(const char * string, unsigned int a, _opt_param(unsigned int b,
     return ptr;
 }
 
-char * st_get_content_no_flags(const unsigned int argc, char ** argv) {
+char * st_get_content_no_flags(const st_uint argc, char ** argv) {
     if (argc < 2 || (strlen(argv[0]) > 2 && argv[0][0] == '-' && argv[0][1] == '-'))
         return NULL;
     
-    unsigned int * indices = _allocate_memory(unsigned int *, argc * sizeof(unsigned int));
-    unsigned int indices_length = 0;
-    unsigned int size = 0;
+    st_uint * indices = _allocate_memory(st_uint *, argc * sizeof(st_uint));
+    st_uint indices_length = 0;
+    st_uint size = 0;
     
-    for (unsigned int i = 1; i < argc; i++) {
+    for (st_uint i = 1; i < argc; i++) {
         if (strlen(argv[i]) > 2 && argv[i][0] == '-' && argv[i][1] == '-')
             continue;
         
@@ -344,9 +357,9 @@ char * st_get_content_no_flags(const unsigned int argc, char ** argv) {
     char * ptr = _allocate_memory(char *, size);
     ptr[(size / sizeof(char)) - 1] = '\0';
     
-    unsigned int index = 0;
-    for (unsigned int s = 0; s < indices_length; s++) {
-        for (unsigned int j = 0; j < strlen(argv[indices[s]]); j++) {
+    st_uint index = 0;
+    for (st_uint s = 0; s < indices_length; s++) {
+        for (st_uint j = 0; j < strlen(argv[indices[s]]); j++) {
             ptr[index] = argv[indices[s]][j];
             index++;
         }
@@ -361,13 +374,13 @@ char * st_get_content_no_flags(const unsigned int argc, char ** argv) {
     return ptr;
 }
 
-char * st_get_content_no_options(const unsigned int argc, char ** argv) {
+char * st_get_content_no_options(const st_uint argc, char ** argv) {
     if (argc < 2 || (strlen(argv[0]) > 2 && argv[0][0] == '-' && argv[0][1] == '-'))
         return NULL;
     
-    unsigned int end = argc;
-    unsigned int size = 0;
-    for (unsigned int i = 1; i < argc; i++) {
+    st_uint end = argc;
+    st_uint size = 0;
+    for (st_uint i = 1; i < argc; i++) {
         if (strlen(argv[i]) > 2 && argv[i][0] == '-' && argv[i][1] == '-') {
             end = i;
             break;
@@ -379,9 +392,9 @@ char * st_get_content_no_options(const unsigned int argc, char ** argv) {
     char * ptr = _allocate_memory(char *, size);
     ptr[(size / sizeof(char)) - 1] = '\0';
     
-    unsigned int index = 0;
-    for (unsigned int start = 1; start < end; start++) {
-        for (unsigned int j = 0; j < strlen(argv[start]); j++) {
+    st_uint index = 0;
+    for (st_uint start = 1; start < end; start++) {
+        for (st_uint j = 0; j < strlen(argv[start]); j++) {
             ptr[index] = argv[start][j];
             index++;
         }
@@ -401,7 +414,7 @@ typedef struct {
     const bool has_value;
 } st_flag_data;
 
-st_flag_data st_flag_get_value(const unsigned int argc, char ** argv, const char * key) {
+st_flag_data st_flag_get_value(const st_uint argc, char ** argv, const char * key) {
     if (!argc) {
         const st_flag_data output = { NULL, 0, 0 };
         return output;
@@ -410,17 +423,17 @@ st_flag_data st_flag_get_value(const unsigned int argc, char ** argv, const char
     char * key_ptr = _allocate_memory(char *, (2 + strlen(key)) * sizeof(char));
     memset(key_ptr, '-', 2 * sizeof(char));
     
-    for (unsigned int i = 0; i < strlen(key); i++)
+    for (st_uint i = 0; i < strlen(key); i++)
         key_ptr[i + 2] = key[i];
     key_ptr[strlen(key) + 2] = '\0';
     
     bool found = false;
     
-    unsigned int start = 0;
-    unsigned int end = argc;
-    unsigned int size = 0;
+    st_uint start = 0;
+    st_uint end = argc;
+    st_uint size = 0;
     
-    for (unsigned int i = 0; i < argc; i++) {
+    for (st_uint i = 0; i < argc; i++) {
         if (!found && !strcmp(argv[i], key_ptr)) {
             start = i + 1;
             found = true;
@@ -446,9 +459,9 @@ st_flag_data st_flag_get_value(const unsigned int argc, char ** argv, const char
         output.value = _allocate_memory(char *, size);
         output.value[size / sizeof(char)] = '\0';
         
-        unsigned int index = 0;
+        st_uint index = 0;
         for (; start != end; start++) {
-            for (unsigned int j = 0; j < strlen(argv[start]); j++) {
+            for (st_uint j = 0; j < strlen(argv[start]); j++) {
                 output.value[index] = argv[start][j];
                 index++;
             }
@@ -463,17 +476,17 @@ st_flag_data st_flag_get_value(const unsigned int argc, char ** argv, const char
     return output;
 }
 
-char * st_shorten(const char * string, const unsigned int limit, _opt_param(const char * placeholder, NULL)) {
+char * st_shorten(const char * string, const st_uint limit, _opt_param(const char * placeholder, NULL)) {
     if (string[0] == '\0' || !limit || strlen(string) <= limit)
         return NULL;
     
-    const unsigned int placeholder_length = placeholder == NULL ? 3 : strlen(placeholder);
+    const st_uint placeholder_length = placeholder == NULL ? 3 : strlen(placeholder);
     char * ptr = _allocate_memory(char *, (1 + limit + placeholder_length) * sizeof(char));
-    for (unsigned int i = 0; i < limit; i++)
+    for (st_uint i = 0; i < limit; i++)
         ptr[i] = string[i];
     
     if (placeholder != NULL) {
-        for (unsigned int i = 0; i < placeholder_length; i++)
+        for (st_uint i = 0; i < placeholder_length; i++)
             ptr[placeholder_length + i] = placeholder[i];
     } else
         memset(ptr + limit, '.', 3 * sizeof(char));
@@ -483,12 +496,12 @@ char * st_shorten(const char * string, const unsigned int limit, _opt_param(cons
 }
 
 // like strcat but you don't have to include a fixed string length
-char * st_dynamic_concat(const unsigned int amount, ...) {    
-    unsigned int bytes = 1 * sizeof(char);
+char * st_dynamic_concat(const st_uint amount, ...) {    
+    st_uint bytes = 1 * sizeof(char);
     va_list vl1;
     va_start(vl1, amount);
     
-    for (unsigned int i = 0; i < amount; i++) {
+    for (st_uint i = 0; i < amount; i++) {
         const char * arg = va_arg(vl1, const char *);
         if (arg[0] == '\0')
             return NULL;
@@ -502,12 +515,12 @@ char * st_dynamic_concat(const unsigned int amount, ...) {
     va_list vl2;
     va_start(vl2, amount);
     
-    unsigned int index = 0;
-    for (unsigned int i = 0; i < amount; i++) {
+    st_uint index = 0;
+    for (st_uint i = 0; i < amount; i++) {
         const char * arg = va_arg(vl2, const char *);
-        const unsigned int argl = strlen(arg);
+        const st_uint argl = strlen(arg);
         
-        for (unsigned int j = index; j < index + argl; j++)
+        for (st_uint j = index; j < index + argl; j++)
             ptr[j] = arg[j - index];
         index += argl;
     }
@@ -525,7 +538,7 @@ bool st_has_custom_emoji(char text[]) {
     unsigned char nc = 0; // number count
     bool ia = false; // is animated
     
-    for (unsigned int i = 0; i < strlen(text); i++) {
+    for (st_uint i = 0; i < strlen(text); i++) {
         if (!s && text[i] == '<')
             s++;
         else if (s == 1) {
@@ -559,7 +572,7 @@ void st_proper_case(char text[]) {
         return;
     
     bool s = false;
-    unsigned int i = 0;
+    st_uint i = 0;
     
     if (text[0] != ' ') {
         text[0] = toupper(text[0]);
@@ -582,7 +595,7 @@ void st_mock(char text[]) {
     if (text[0] == '\0')
         return;
     
-    for (unsigned int i = 0; i < strlen(text); i += 2)
+    for (st_uint i = 0; i < strlen(text); i += 2)
         text[i] = toupper(text[i]);
 }
 
@@ -590,12 +603,12 @@ void st_scramble(char text[]) {
     if (text[0] == '\0')
         return;
     
-    const unsigned int length = strlen(text);
+    const st_uint length = strlen(text);
     if (length == 1)
         return;
     
-    for (unsigned int i = 0; i < length - 1; i++) {
-        const unsigned int j = rand() % length;
+    for (st_uint i = 0; i < length - 1; i++) {
+        const st_uint j = rand() % length;
         const char temp = text[j];
         text[j] = text[i];
         text[i] = temp;
@@ -605,13 +618,13 @@ void st_scramble(char text[]) {
 char * st_progress_bar(
     const double in_total, const double total,
     const char elapsed_char, const char progress_char,
-    const char empty_char, const unsigned int bar_length
+    const char empty_char, const st_uint bar_length
 ) {
     if (in_total < 0 || total < 1 || in_total > total || !bar_length)
         return NULL;
     
-    const unsigned int available = floor((in_total / total) * bar_length);
-    const unsigned int remaining_length = bar_length - (available + (available == bar_length ? 0 : 1));
+    const st_uint available = floor((in_total / total) * bar_length);
+    const st_uint remaining_length = bar_length - (available + (available == bar_length ? 0 : 1));
 
     char * result = _allocate_memory(char *, (1 * sizeof(char)) + (available * sizeof(char)) + (remaining_length * sizeof(char)));
     result[sizeof(result) / sizeof(char)] = '\0';
@@ -632,14 +645,14 @@ char * st_to_abbreviation(const char * text) {
     
     char * result = _allocate_memory(char *, sizeof(text));
     bool s = false;
-    unsigned int length = 0;
+    st_uint length = 0;
     
     if (text[0] != ' ') {
         result[0] = text[0];
         length++;
     }
     
-    for (unsigned int i = 0; i < strlen(text); i++) {
+    for (st_uint i = 0; i < strlen(text); i++) {
         if (text[i] == ' ') {
             s = true;
             continue;
@@ -654,3 +667,9 @@ char * st_to_abbreviation(const char * text) {
     result[length] = '\0';
     return result;
 }
+
+#ifndef __cplusplus
+#undef bool
+#undef true
+#undef false
+#endif

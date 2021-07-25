@@ -1,18 +1,45 @@
 # string_toolkit.h
 A simple C/C++ library containing tools to manipulate a C string. Inspired by [string-toolkit by VoltrexMaster](https://github.com/VoltrexMaster/string-toolkit). Everything is contained in the header file so you can just download it.
 
-All structs, functions, and macro names start with a `st_` prefix.
+All typedefs, structs, functions, and macros start with a `st_` prefix.
+
+> If you want to use 64-bit integers as the default integer type, you can do this before including it on your code;
+> ```c
+#define ST_64
+#include "string_toolkit.h"
+```
+
+## Type definitions
+### `st_int`
+Represents an integer type.
+```c
+#ifdef ST_64
+typedef int st_int;
+#else
+typedef long long st_int;
+#endif
+```
+
+### `st_uint`
+Represents an unsigned integer type.
+```c
+#ifdef ST_64
+typedef unsigned int st_uint;
+#else
+typedef unsigned long long st_uint;
+#endif
+```
 
 ## Structs
 ### `st_str_arr`
 Represents an array of strings.
 - `char ** data` The array. Can be `NULL` if the size below is `0`.
-- `const unsigned int size` The array size.
+- `const st_uint size` The array size.
 
 ### `st_uint_arr`
-Represents a dynamically allocated unsigned integer array. Similar to the struct above.
-- `unsigned int * data` The array. Can be `NULL` if the size below is `0`.
-- `const unsigned int size` The array size.
+Represents a dynamically allocated [`st_uint`](#st_uint) array. Similar to the struct above.
+- `st_uint * data` The array. Can be `NULL` if the size below is `0`.
+- `const st_uint size` The array size.
 
 ### `st_flag_data`
 The data returned after retrieving a value from a console flag.
@@ -28,7 +55,7 @@ Returns a [`st_uint_arr`](#st_uint_arr) struct. Array returned can be empty if t
 st_uint_arr indexes = st_get_indexes("Hello, World!", 'l');
 
 if (indexes.data != NULL) {
-    for (unsigned int i = 0; i < indexes.size; i++) {
+    for (st_uint i = 0; i < indexes.size; i++) {
         printf("%d\n", indexes.data[i]);
     }
 }
