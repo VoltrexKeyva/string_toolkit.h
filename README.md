@@ -38,8 +38,8 @@ Represents a dynamically allocated [`st_uint`](#st_uint) array. Similar to the s
 #### `st_flag_data`
 The data returned after retrieving a value from a console flag.
 - `char * value` The string value. Could be `NULL` if the one or more booleans below are not `1`.
-- `const bool found` A boolean that tells whether it found the flag or not.
-- `const bool has_value` A boolean that tells whether the flag has any value or not. Can be `0` if things like `--flag --flag2` happened.
+- `const unsigned char found` A boolean that tells whether it found the flag or not.
+- `const unsigned char has_value` A boolean that tells whether the flag has any value or not. Can be `0` if things like `--flag --flag2` happened.
 
 ## Functions
 
@@ -65,9 +65,9 @@ char * repeated_string = st_repeat("Hello", 5);
 #### Check if a string start or ends with a specific string
 Self-explanatory.
 ```c
-bool a = st_starts_with("Hello", "He");
+int a = st_starts_with("Hello", "He");
 
-bool b = st_ends_with("Hello", "lo");
+int b = st_ends_with("Hello", "lo");
 ```
 
 #### Strip a string from a character
@@ -158,10 +158,10 @@ st_proper_case(string);
 #### Check if a string contains a discord custom emoji
 A discord custom emoji can be `<:emoji_name:emoji_id>` or `<a:emoji_name:emoji_id>`. This function validates if the specified string contains them.
 ```c
-bool has_custom_emoji1 = st_has_custom_emoji("This is a text");
+int has_custom_emoji1 = st_has_custom_emoji("This is a text");
 // returns 0
 
-bool has_custom_emoji2 = st_has_custom_emoji("This is a text <a:something:66666666666666666>");
+int has_custom_emoji2 = st_has_custom_emoji("This is a text <a:something:66666666666666666>");
 // returns 1
 ```
 
@@ -246,18 +246,18 @@ int main(int argc, char ** argv) {
 ## Macros
 #### Check if a character is alphanumberic, or an underscore
 ```c
-bool a = st_is_alnum('a');
+int a = st_is_alnum('a');
 // returns 1
 
-bool b = st_is_alnum('/');
+int b = st_is_alnum('/');
 // returns 0
 ```
 
 #### Check if a character is a number
 ```c
-bool a = st_is_num('6');
+int a = st_is_num('6');
 // returns 1
 
-bool b = st_is_num('a');
+int b = st_is_num('a');
 // returns 0
 ```

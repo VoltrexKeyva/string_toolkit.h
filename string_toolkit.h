@@ -673,3 +673,8 @@ char * st_to_abbreviation(const char * text) {
 #undef true
 #undef false
 #endif
+
+#undef _trim_arr
+#undef _free_two_dim_arr
+#undef _allocate_memory
+#undef _opt_param
