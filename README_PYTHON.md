@@ -1,13 +1,8 @@
-# string-toolkit Documentation
+# string-toolkit
+
 You can install from pip with:
 ```bash
 $ python3 -m pip install string-toolkit
-```
-or build directly from source with:
-```bash
-$ git clone https://github.com/vierofernando/string_toolkit.h.git
-$ cd string_toolkit.h/
-$ python3 setup.py build_ext --inplace
 ```
 
 ### Example

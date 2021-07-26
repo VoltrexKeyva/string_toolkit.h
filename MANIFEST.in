@@ -1,0 +1,4 @@
+include python_binding.c
+include string_toolkit.h
+include setup.py
+include README_PYTHON.md

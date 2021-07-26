@@ -2,7 +2,7 @@ from setuptools import setup, Extension
 
 setup(
     name='string-toolkit',
-    version='0.0.3',
+    version='0.0.4',
     description='Python wrapper for the string_toolkit.h C/C++ header',
     ext_modules=[
         Extension('st', ['python_binding.c'])
