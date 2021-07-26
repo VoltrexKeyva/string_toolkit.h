@@ -50,4 +50,4 @@ True
 ```
 
 ### C/C++ header
-This package is wrapped around a C/C++ header! [see the documentation for it here.](https://github.com/vierofernando/string_toolkit.h/blob/main/README_HEADER.md)
+This package is a wrapper around a C/C++ header! [see the documentation for it here.](https://github.com/vierofernando/string_toolkit.h/blob/main/README_HEADER.md)
