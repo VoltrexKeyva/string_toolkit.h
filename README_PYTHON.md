@@ -1,4 +1,4 @@
-# string-toolkit Documentation.
+# string-toolkit Documentation
 You can install from pip with:
 ```bash
 $ python3 -m pip install string-toolkit
@@ -14,6 +14,7 @@ $ python3 setup.py build_ext --inplace
 ```py
 >>> import st
 >>> st.to_abbreviation("Hello, World!")
+'HW'
 ```
 
 ### Trying with more functions
@@ -47,3 +48,6 @@ True
 >>> st.to_chunks("Hello, World!", 5)
 ['Hello', ', Wor', 'ld!']
 ```
+
+### C/C++ header
+This package is wrapped around a C/C++ header! [see the documentation for it here.](https://github.com/vierofernando/string_toolkit.h/blob/main/README_HEADER.md)

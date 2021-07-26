@@ -318,7 +318,7 @@ char * st_strip(const char * string, const char strip_char) {
 }
 
 char * st_substr(const char * string, st_uint a, _opt_param(st_uint b, 0)) {
-    if (string[0] == '\0' || (a + b) >= strlen(string))
+    if (string[0] == '\0' || (a + b) > strlen(string))
         return NULL;
     
     if (!b)
