@@ -695,4 +695,6 @@ char * st_to_abbreviation(const char * text) {
 #undef _allocate_memory
 #undef _opt_param
 
+#ifndef STRING_TOOLKIT_H
 #define STRING_TOOLKIT_H
+#endif
