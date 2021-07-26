@@ -34,9 +34,15 @@ typedef int st_int;
 #define _opt_param(name, default) \
     name
 
+#if defined(true) && defined(false)
+#define _bool_already_defined
+#else
+
 #define bool         unsigned char
 #define true         1
 #define false        0
+
+#endif
 
 static void __free_two_dim_arr(void ** arr, const st_uint length)
 #else
@@ -669,12 +675,18 @@ char * st_to_abbreviation(const char * text) {
 }
 
 #ifndef __cplusplus
+#ifdef _bool_already_defined
+#undef _bool_already_defined
+#else
 #undef bool
 #undef true
 #undef false
+#endif
 #endif
 
 #undef _trim_arr
 #undef _free_two_dim_arr
 #undef _allocate_memory
 #undef _opt_param
+
+#define STRING_TOOLKIT_H
