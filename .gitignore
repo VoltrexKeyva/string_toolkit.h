@@ -4,3 +4,4 @@ build/
 *.pyd
 dist/
 MANIFEST
+string_toolkit.egg-info/
