@@ -2,3 +2,5 @@
 test.c
 build/
 *.pyd
+dist/
+MANIFEST
