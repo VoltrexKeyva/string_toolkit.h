@@ -632,14 +632,20 @@ char * st_progress_bar(
     const st_uint available = floor((in_total / total) * bar_length);
     const st_uint remaining_length = bar_length - (available + (available == bar_length ? 0 : 1));
 
-    char * result = _allocate_memory(char *, (1 * sizeof(char)) + (available * sizeof(char)) + (remaining_length * sizeof(char)));
-    result[sizeof(result) / sizeof(char)] = '\0';
+    char * result = _allocate_memory(char *, bar_length * sizeof(char));
+    result[bar_length] = '\0';
     
     memset(result, elapsed_char, available * sizeof(char));
     
     if (remaining_length) {
         memset(result + available, progress_char, sizeof(char));
         memset(result + available + 1, empty_char, remaining_length * sizeof(char));
+    }
+    
+    if (strlen(result) > bar_length) {
+        char * new_ptr;
+        _trim_arr(char, result, bar_length, new_ptr);
+        return new_ptr;
     }
     
     return result;
